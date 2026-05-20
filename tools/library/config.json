@@ -1,0 +1,10 @@
+{
+  "blocks": [
+    {
+      "name": "Product Columns",
+      "id": "columns-product",
+      "description": "Used to display drug info side-by-side with images",
+      "template": "<table><tr><td>columns-product</td></tr><tr><td></td><td></td></tr></table>"
+    }
+  ]
+}
