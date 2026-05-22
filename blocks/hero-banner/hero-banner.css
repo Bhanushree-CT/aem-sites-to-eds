@@ -1,0 +1,141 @@
+/* hero-banner block - full-width CTA banner with background image and dark overlay */
+
+/* Wrapper override - dark background, full-width */
+.hero-banner-container .hero-banner-wrapper {
+  max-width: unset;
+  padding: 0 24px;
+  background-color: var(--dark-color);
+  padding-top: 128px;
+  padding-bottom: 128px;
+}
+
+/* Block container */
+.hero-banner {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 448px;
+  border-radius: 20px;
+  overflow: hidden;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Rows - base selectors first for specificity ordering */
+.hero-banner > div:first-child {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-banner > div:last-child {
+  position: relative;
+  z-index: 2;
+  padding: 40px 24px;
+  max-width: 672px;
+}
+
+/* Image row - nested selectors */
+.hero-banner > div:first-child > div {
+  position: absolute;
+  inset: 0;
+}
+
+.hero-banner > div:first-child picture {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.hero-banner > div:first-child img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Content row - nested selectors */
+.hero-banner > div:last-child > div {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Dark gradient overlay via pseudo-element */
+.hero-banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(to top, rgb(0 0 0 / 70%) 0%, rgb(0 0 0 / 0%) 60%);
+  z-index: 1;
+  pointer-events: none;
+  border-radius: 20px;
+}
+
+/* Heading */
+.hero-banner h2 {
+  font-family: var(--heading-font-family);
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: -1.12px;
+  margin: 0;
+}
+
+/* Paragraph */
+.hero-banner p {
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-m);
+  font-weight: 400;
+  line-height: 1.6;
+  color: #fff;
+  margin: 16px 0 0;
+}
+
+/* Button styling for the CTA link */
+.hero-banner p:last-child {
+  margin-top: 32px;
+}
+
+.hero-banner p:last-child a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  background-color: #fff;
+  color: var(--dark-color);
+  border: 2px solid #fff;
+  border-radius: 9999px;
+  font-family: var(--body-font-family);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.6;
+  text-decoration: none;
+  text-transform: none;
+  letter-spacing: normal;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.hero-banner p:last-child a:hover {
+  background-color: transparent;
+  color: #fff;
+  border-color: #fff;
+  text-decoration: none;
+}
+
+/* Desktop styles */
+@media (width >= 900px) {
+  .hero-banner {
+    margin: 0 auto;
+  }
+
+  .hero-banner > div:last-child {
+    padding: 64px;
+  }
+
+  .hero-banner h2 {
+    font-size: 56px;
+  }
+}
