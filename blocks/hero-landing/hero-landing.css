@@ -1,0 +1,159 @@
+/* hero-landing block */
+
+/* Section padding override - block handles its own padding */
+main > .section.hero-landing-container {
+  padding-top: 0;
+}
+
+/* Full-width wrapper override */
+.hero-landing-wrapper {
+  max-width: 100% !important;
+  padding: 0 !important;
+}
+
+/* Block container */
+.hero-landing {
+  background-color: var(--light-color);
+  color: var(--text-color);
+  padding: 64px 24px;
+}
+
+/* Row - single row with two cells */
+.hero-landing > div {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Text cell - use block display so inline-block children can sit side by side */
+.hero-landing > div > div:first-child {
+  display: block;
+}
+
+/* Image cell */
+.hero-landing > div > div:last-child p {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 0;
+}
+
+/* Heading */
+.hero-landing h1 {
+  font-size: 36px;
+  font-weight: 700;
+  font-family: var(--heading-font-family);
+  line-height: 1.1;
+  letter-spacing: -1.12px;
+  text-transform: uppercase;
+  color: var(--text-color);
+  margin: 0;
+}
+
+/* Subheading paragraph */
+.hero-landing > div > div:first-child > p:first-of-type {
+  font-size: var(--body-font-size-m);
+  font-family: var(--body-font-family);
+  line-height: 1.6;
+  color: var(--text-color);
+  margin: 24px 0 0;
+}
+
+/* Button paragraphs - make them inline so they sit side by side */
+.hero-landing > div > div:first-child > p:nth-of-type(n+2) {
+  display: inline-block;
+  margin: 0;
+  margin-right: 16px;
+}
+
+/* First button paragraph - add top spacing */
+.hero-landing > div > div:first-child > p:nth-of-type(2) {
+  margin-top: 32px;
+}
+
+/* Style links as buttons */
+.hero-landing > div > div:first-child p a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--body-font-family);
+  line-height: 1.25;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+}
+
+/* Primary button (first link) */
+.hero-landing > div > div:first-child > p:nth-of-type(2) a {
+  background-color: var(--dark-color);
+  color: var(--background-color);
+  border: 2px solid var(--dark-color);
+}
+
+/* Secondary button (second link) */
+.hero-landing > div > div:first-child > p:nth-of-type(3) a {
+  background-color: var(--background-color);
+  color: var(--dark-color);
+  border: 2px solid var(--dark-color);
+}
+
+/* Button hover states */
+.hero-landing > div > div:first-child > p:nth-of-type(2) a:hover {
+  background-color: var(--link-color);
+  border-color: var(--link-color);
+  color: var(--background-color);
+}
+
+.hero-landing > div > div:first-child > p:nth-of-type(3) a:hover {
+  background-color: var(--light-color);
+  border-color: var(--link-color);
+  color: var(--dark-color);
+}
+
+/* Images */
+.hero-landing img {
+  object-fit: cover;
+  border-radius: 20px;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 3 / 2;
+}
+
+.hero-landing picture {
+  display: block;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+/* Desktop layout */
+@media (width >= 900px) {
+  .hero-landing {
+    padding: 128px 32px;
+  }
+
+  .hero-landing > div {
+    flex-direction: row;
+    gap: 64px;
+    align-items: center;
+  }
+
+  .hero-landing > div > div:first-child {
+    flex: 1 1 50%;
+  }
+
+  .hero-landing > div > div:last-child {
+    flex: 1 1 50%;
+  }
+
+  .hero-landing h1 {
+    font-size: 56px;
+    line-height: 1.1;
+  }
+}

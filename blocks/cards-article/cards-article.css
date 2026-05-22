@@ -1,0 +1,117 @@
+/* Block: cards-article */
+
+/* Grid layout - mobile first (1 column) */
+.cards-article > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+/* Card item */
+.cards-article > ul > li {
+  border: 1px solid rgb(232 232 232);
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  background-color: var(--background-color);
+}
+
+.cards-article > ul > li:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
+}
+
+/* Card link wrapper - makes entire card clickable */
+.cards-article .cards-article-card-link {
+  display: block;
+  text-decoration: none;
+  color: var(--text-color);
+}
+
+/* Card image wrapper */
+.cards-article .cards-article-card-image {
+  overflow: hidden;
+  line-height: 0;
+}
+
+/* Card image */
+.cards-article .cards-article-card-image img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.cards-article > ul > li:hover .cards-article-card-image img {
+  transform: scale(1.05);
+}
+
+/* Card body */
+.cards-article .cards-article-card-body {
+  padding: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Category tag - first paragraph */
+.cards-article .cards-article-card-body p:first-child {
+  display: inline-flex;
+  align-items: center;
+  background-color: rgb(244 254 139);
+  color: var(--text-color);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  font-family: var(--body-font-family);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Date - second paragraph */
+.cards-article .cards-article-card-body p:nth-child(2) {
+  color: var(--link-color);
+  font-size: var(--body-font-size-xs);
+  font-weight: 400;
+  font-family: var(--body-font-family);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* h3 title */
+.cards-article .cards-article-card-body h3 {
+  font-size: 18px;
+  font-weight: 700;
+  font-family: var(--heading-font-family);
+  line-height: 1.1;
+  margin: 0;
+  color: var(--text-color);
+  text-transform: uppercase;
+  width: 100%;
+}
+
+/* Tablet: 2 columns */
+@media (width >= 600px) {
+  .cards-article > ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop: 4 columns */
+@media (width >= 900px) {
+  .cards-article > ul {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .cards-article .cards-article-card-image img {
+    height: 171px;
+  }
+}

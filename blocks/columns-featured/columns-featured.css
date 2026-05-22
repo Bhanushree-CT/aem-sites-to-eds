@@ -1,0 +1,103 @@
+/* columns-featured block — featured article with image + metadata */
+
+.columns-featured > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.columns-featured > div > div {
+  order: 1;
+}
+
+.columns-featured > div > .columns-featured-img-col {
+  order: 0;
+}
+
+/* Image styling */
+.columns-featured > div > .columns-featured-img-col img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: 20px;
+}
+
+/* Text cell */
+.columns-featured > div > div:not(.columns-featured-img-col) {
+  padding-top: 24px;
+}
+
+/* Breadcrumb paragraph (first p with links) */
+.columns-featured > div > div:not(.columns-featured-img-col) > p:first-child {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 0 0 32px;
+  font-size: 16px;
+  font-family: var(--body-font-family);
+  line-height: 1.6;
+}
+
+.columns-featured > div > div:not(.columns-featured-img-col) > p:first-child a {
+  font-size: 16px;
+  font-weight: 500;
+  font-family: var(--body-font-family);
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.columns-featured > div > div:not(.columns-featured-img-col) > p:first-child a:last-child {
+  color: var(--link-color);
+}
+
+/* Heading */
+.columns-featured h2 {
+  font-size: var(--heading-font-size-xl);
+  font-weight: 700;
+  font-family: var(--heading-font-family);
+  line-height: 44px;
+  text-transform: uppercase;
+  color: var(--text-color);
+  margin: 0;
+}
+
+/* Author paragraph */
+.columns-featured > div > div:not(.columns-featured-img-col) > p:nth-child(3) {
+  font-size: 14px;
+  font-family: var(--body-font-family);
+  line-height: 1.6;
+  color: var(--text-color);
+  margin: 16px 0 0;
+}
+
+/* Date/read time paragraph */
+.columns-featured > div > div:not(.columns-featured-img-col) > p:nth-child(4) {
+  font-size: 14px;
+  font-family: var(--body-font-family);
+  line-height: 1.6;
+  color: var(--link-color);
+  margin: 8px 0 0;
+}
+
+@media (width >= 900px) {
+  .columns-featured > div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: center;
+    flex-direction: unset;
+  }
+
+  .columns-featured > div > div {
+    order: unset;
+  }
+
+  .columns-featured > div > div:not(.columns-featured-img-col) {
+    padding-top: 0;
+  }
+
+  .columns-featured h2 {
+    font-size: var(--heading-font-size-xxl);
+    line-height: 44px;
+  }
+}
