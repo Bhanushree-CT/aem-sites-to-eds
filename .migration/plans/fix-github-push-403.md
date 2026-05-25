@@ -1,80 +1,104 @@
-# Fix GitHub Push 403 Permission Denied
+# Hero Product Block Development Plan
 
-## Problem
+## Summary
 
-The error `remote: permission to bhanushree-ct/aem-sites-to-eds.git denied` with a 403 status indicates that the personal access token (PAT) being used either:
+Create a new `blocks/hero-product/` EDS block that renders a full-width dark hero banner with a background image, heading, description, and CTA button. Based on the design reference, this is a dark-themed product showcase hero with white text overlaid on a dark background, featuring a prominent product image on the right side.
 
-1. **Has expired** — GitHub PATs have expiration dates
-2. **Lacks required scopes** — The token needs `repo` scope for push access
-3. **Is cached/stale** — Git credential manager is using an old token
-4. **Wrong account** — The token belongs to a different GitHub account than the repo owner
+## Content Model (DA.live Authoring Structure)
 
-## Diagnosis Steps
+The block uses the standard EDS hero pattern: **Row 1 = background image**, **Row 2 = text content**.
 
-- [ ] Verify which credential is being used by Git
-- [ ] Check if the token has `repo` scope on GitHub
-- [ ] Check if the token has expired
-- [ ] Clear cached credentials if stale
-- [ ] Re-authenticate with a valid token
+**Authored table in DA.live:**
 
-## Fix Instructions
+| Hero Product |
+|---|
+| `[background-image.jpg]` |
+| `<h1>Experience Media Like Never Before</h1><p>Enjoy award-winning stereo beats with wireless listening freedom...</p><p><a href="/products">Our Products</a></p>` |
 
-### Option A: Generate a new Personal Access Token (recommended)
+**Row breakdown:**
+1. **Row 1 (image row):** A single cell with a `<picture>` element — the background image
+2. **Row 2 (content row):** A single cell with heading (`h1`), paragraph(s), and a CTA link (wrapped in `<strong>` for primary button decoration by EDS)
 
-1. Go to **GitHub → Settings → Developer Settings → Personal Access Tokens → Fine-grained tokens** (or classic tokens)
-2. Generate a new token with:
-   - **Repository access:** `bhanushree-ct/aem-sites-to-eds`
-   - **Permissions:** Contents (Read and Write), Metadata (Read)
-   - Or for classic tokens: check the `repo` scope
-3. Copy the new token
+## Visual Design (from reference image)
 
-### Option B: Clear cached credentials and re-push
+- **Background:** Solid dark (`#0a0a0a`) with product image as visual element
+- **Layout:** Two-column feel — text content left-aligned, product image on right (achieved via background positioning)
+- **Heading:** Large bold white text, ~48px mobile / ~64px desktop, no uppercase
+- **Description:** White/grey body text, ~16-18px
+- **CTA button:** Dark background (#1a1a1a) with white text, rounded pill shape, arrow icon (→)
+- **Responsive:** Full-width, stacks naturally on mobile with reduced padding
 
-Run these commands in your terminal:
+## Proposed Implementation
 
-```bash
-# Clear any cached credentials for github.com
-git credential reject <<EOF
-protocol=https
-host=github.com
-EOF
+### `hero-product.js`
 
-# Push again — Git will prompt for username and token
-git push origin main
+```js
+export default function decorate(block) {
+  const rows = [...block.children];
+  if (rows[0]) rows[0].classList.add('hero-product-image');
+  if (rows[1]) rows[1].classList.add('hero-product-content');
+}
 ```
 
-When prompted:
-- **Username:** `bhanushree-ct`
-- **Password:** paste your new PAT (not your GitHub password)
+- Synchronous, minimal DOM manipulation
+- Assigns semantic class names to the two rows
+- Relies on CSS for layout and positioning
 
-### Option C: Set token directly in the remote URL (quick fix)
+### `hero-product.css`
 
-```bash
-git remote set-url origin https://bhanushree-ct:<YOUR_PAT>@github.com/bhanushree-ct/aem-sites-to-eds.git
-git push origin main
+Key styling:
+- Full-width wrapper override (dark background, no max-width constraint)
+- Background image positioned absolutely, covering the block
+- Content overlay with z-index stacking
+- CTA button with dark pill style and arrow pseudo-element
+- Mobile-first responsive (padding/font scaling at 900px breakpoint)
+- Modern range media query notation per project stylelint rules
+
+### Sample Authored Content (`.plain.html` format)
+
+```html
+<div class="hero-product">
+  <div>
+    <div>
+      <picture>
+        <source type="image/webp" srcset="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1600&q=80">
+        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1600&q=80" alt="Premium wireless headphones">
+      </picture>
+    </div>
+  </div>
+  <div>
+    <div>
+      <h1>Experience Media Like Never Before</h1>
+      <p>Enjoy award-winning stereo beats with wireless listening freedom and sleek, streamlined with premium padded and delivering first-rate playback.</p>
+      <p><strong><a href="/products">Our Products</a></strong></p>
+    </div>
+  </div>
+</div>
 ```
 
-> ⚠️ This stores the token in `.git/config` — use only for quick testing, not long-term.
+## Files to Create
 
-### Option D: Switch to SSH (avoids token expiry issues)
-
-```bash
-# Set remote to SSH
-git remote set-url origin git@github.com:bhanushree-ct/aem-sites-to-eds.git
-
-# Ensure your SSH key is added to GitHub (Settings → SSH keys)
-git push origin main
-```
+| File | Action |
+|------|--------|
+| `blocks/hero-product/hero-product.js` | Create new |
+| `blocks/hero-product/hero-product.css` | Create new |
 
 ## Checklist
 
-- [ ] Verify current token hasn't expired (GitHub → Settings → Developer Settings → Tokens)
-- [ ] Ensure token has `repo` scope or Contents write permission
-- [ ] Clear stale cached credentials
-- [ ] Re-authenticate with valid token
-- [ ] Retry `git push origin main`
-- [ ] Confirm push succeeds
+- [ ] Create directory `blocks/hero-product/`
+- [ ] Write `blocks/hero-product/hero-product.js` with row class decoration
+- [ ] Write `blocks/hero-product/hero-product.css` with dark theme, responsive layout, CTA styling
+- [ ] Run `npm run lint` (ESLint + Stylelint) to verify no errors
+- [ ] Verify JS syntax with `node --check`
+- [ ] Confirm block follows EDS conventions (no standalone HTML pages, no demo pages)
 
-## Most Likely Cause
+## Key Design Decisions
 
-Since you're using HTTPS with a token and getting a 403, the most common cause is an **expired token** or a **fine-grained token missing the Contents (write) permission**. Generating a fresh token with the correct scopes (Option A) and clearing the credential cache (Option B) will resolve this in most cases.
+- **No `text-transform: uppercase`** on heading — the design shows sentence-case/title-case, unlike the global heading style in this project. The block CSS will override with `text-transform: none`.
+- **CTA uses `<strong>` wrapping** — standard EDS pattern for primary button decoration. The block styles the link within the last paragraph.
+- **Background image as Row 1** — follows the standard EDS hero authoring pattern (same as the existing `hero` block in the boilerplate).
+- **Product image is the background** — the right-side product image is part of the background photo composition, not a separate authored element.
+
+## Execution
+
+This plan requires Execute mode to implement. Switch to Execute mode to proceed with file creation.
