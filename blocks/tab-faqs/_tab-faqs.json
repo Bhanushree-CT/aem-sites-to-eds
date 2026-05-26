@@ -1,0 +1,56 @@
+{
+  "definitions": [
+    {
+      "title": "Tab FAQs",
+      "id": "tab-faqs",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Tab FAQs",
+              "model": "tab-faqs"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "tab-faqs",
+      "fields": [
+        {
+          "component": "group",
+          "name": "faqItem",
+          "label": "FAQ Item",
+          "repeatable": true,
+          "fields": [
+            {
+              "component": "text",
+              "name": "tabName",
+              "label": "Tab/Category Name",
+              "valueType": "string",
+              "required": false
+            },
+            {
+              "component": "text",
+              "name": "question",
+              "label": "Question",
+              "valueType": "string",
+              "required": true
+            },
+            {
+              "component": "richtext",
+              "name": "answer",
+              "label": "Answer",
+              "valueType": "string",
+              "required": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "filters": []
+}
