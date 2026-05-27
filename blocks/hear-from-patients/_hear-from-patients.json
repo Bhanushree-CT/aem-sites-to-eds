@@ -1,0 +1,64 @@
+{
+  "definitions": [
+    {
+      "title": "Hear From Patients",
+      "id": "hear-from-patients",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Hear From Patients",
+              "model": "hear-from-patients"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "hear-from-patients",
+      "fields": [
+        {
+          "component": "group",
+          "name": "slide",
+          "label": "Patient Testimonial",
+          "repeatable": true,
+          "fields": [
+            {
+              "component": "richtext",
+              "name": "quote",
+              "label": "Testimonial Quote",
+              "valueType": "string",
+              "required": true
+            },
+            {
+              "component": "text",
+              "name": "authorName",
+              "label": "Patient Name",
+              "valueType": "string",
+              "required": true
+            },
+            {
+              "component": "text",
+              "name": "authorMeta",
+              "label": "Patient Description",
+              "valueType": "string",
+              "required": false
+            },
+            {
+              "component": "reference",
+              "name": "image",
+              "label": "Patient Photo",
+              "valueType": "string",
+              "multi": false,
+              "required": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "filters": []
+}
