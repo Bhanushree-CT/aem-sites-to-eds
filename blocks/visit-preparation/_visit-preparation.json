@@ -1,0 +1,71 @@
+{
+  "definitions": [
+    {
+      "title": "Visit Preparation",
+      "id": "visit-preparation",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Visit Preparation",
+              "model": "visit-preparation"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "visit-preparation",
+      "fields": [
+        {
+          "component": "group",
+          "name": "card",
+          "label": "Preparation Card",
+          "repeatable": true,
+          "fields": [
+            {
+              "component": "reference",
+              "name": "icon",
+              "label": "Card Icon",
+              "valueType": "string",
+              "multi": false,
+              "required": false
+            },
+            {
+              "component": "text",
+              "name": "title",
+              "label": "Card Title",
+              "valueType": "string",
+              "required": true
+            },
+            {
+              "component": "richtext",
+              "name": "description",
+              "label": "Card Description",
+              "valueType": "string",
+              "required": false
+            },
+            {
+              "component": "text",
+              "name": "ctaText",
+              "label": "Button Label",
+              "valueType": "string",
+              "required": false
+            },
+            {
+              "component": "text",
+              "name": "ctaLink",
+              "label": "Button Link URL",
+              "valueType": "string",
+              "required": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "filters": []
+}
