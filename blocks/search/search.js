@@ -1,14 +1,14 @@
 // --- 1. Algolia Configuration ---
 const ALGOLIA_APP_ID = 'EX4T3T2OE1';
 const ALGOLIA_SEARCH_KEY = '89ac8a6eaa175d2683eb6c95c1808ba2';
-const ALGOLIA_INDEX_NAME = 'eds-migrated-site';
+const ALGOLIA_INDEX_NAME = 'wknd-migrated-site';
 
 // --- 2. Algolia API Fetch Logic ---
 async function fetchAlgoliaResults(query) {
   if (!query) return [];
 
   const url = `https://${ALGOLIA_APP_ID}-dsn.algolia.net/1/indexes/${ALGOLIA_INDEX_NAME}/query`;
-  
+
   try {
     const response = await fetch(url, {
       method: 'POST',
@@ -21,14 +21,12 @@ async function fetchAlgoliaResults(query) {
     });
 
     if (!response.ok) {
-      console.error('Algolia API request failed:', response.status);
       return [];
     }
 
     const data = await response.json();
     return data.hits || [];
   } catch (error) {
-    console.error('Error fetching from Algolia:', error);
     return [];
   }
 }
