@@ -12,7 +12,8 @@ async function fetchQueryIndex() {
 function filterResults(index, query) {
   const terms = query.toLowerCase().trim().split(/\s+/);
   return index.filter((item) => {
-    const searchable = `${item.title || ''} ${item.description || ''} ${item.path || ''}`.toLowerCase();
+    // --- UPDATE: Added item.content to the searchable string ---
+    const searchable = `${item.title || ''} ${item.description || ''} ${item.path || ''} ${item.content || ''}`.toLowerCase();
     return terms.every((term) => searchable.includes(term));
   });
 }

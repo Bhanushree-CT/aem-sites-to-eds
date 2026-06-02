@@ -17,4 +17,4 @@ indices:
         value: attribute(el, "content")
       content:
         select: main
-        value: textContent
+        value: words(textContent, 150)
