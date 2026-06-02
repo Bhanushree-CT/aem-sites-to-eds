@@ -1,23 +1,39 @@
-let queryIndex = null;
+// --- 1. Algolia Configuration ---
+const ALGOLIA_APP_ID = 'EX4T3T2OE1';
+const ALGOLIA_SEARCH_KEY = '89ac8a6eaa175d2683eb6c95c1808ba2';
+const ALGOLIA_INDEX_NAME = 'eds-migrated-site';
 
-async function fetchQueryIndex() {
-  if (queryIndex) return queryIndex;
-  const resp = await fetch('/query-index.json');
-  if (!resp.ok) return [];
-  const json = await resp.json();
-  queryIndex = json.data || [];
-  return queryIndex;
+// --- 2. Algolia API Fetch Logic ---
+async function fetchAlgoliaResults(query) {
+  if (!query) return [];
+
+  const url = `https://${ALGOLIA_APP_ID}-dsn.algolia.net/1/indexes/${ALGOLIA_INDEX_NAME}/query`;
+  
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Algolia-Application-Id': ALGOLIA_APP_ID,
+        'X-Algolia-API-Key': ALGOLIA_SEARCH_KEY,
+      },
+      body: JSON.stringify({ params: `query=${encodeURIComponent(query)}&hitsPerPage=10` }),
+    });
+
+    if (!response.ok) {
+      console.error('Algolia API request failed:', response.status);
+      return [];
+    }
+
+    const data = await response.json();
+    return data.hits || [];
+  } catch (error) {
+    console.error('Error fetching from Algolia:', error);
+    return [];
+  }
 }
 
-function filterResults(index, query) {
-  const terms = query.toLowerCase().trim().split(/\s+/);
-  return index.filter((item) => {
-    // --- UPDATE: Added item.content to the searchable string ---
-    const searchable = `${item.title || ''} ${item.description || ''} ${item.path || ''} ${item.content || ''}`.toLowerCase();
-    return terms.every((term) => searchable.includes(term));
-  });
-}
-
+// --- 3. Render Results UI ---
 function renderResults(container, results, query) {
   container.innerHTML = '';
 
@@ -42,12 +58,12 @@ function renderResults(container, results, query) {
     li.className = 'search-result-item';
 
     const link = document.createElement('a');
-    link.href = item.path;
+    link.href = item.path || item.url || '#';
     link.className = 'search-result-link';
 
     const title = document.createElement('h3');
     title.className = 'search-result-title';
-    title.textContent = item.title || item.path;
+    title.textContent = item.title || item.path || 'Untitled';
     link.append(title);
 
     if (item.description) {
@@ -59,7 +75,7 @@ function renderResults(container, results, query) {
 
     const path = document.createElement('span');
     path.className = 'search-result-path';
-    path.textContent = item.path;
+    path.textContent = item.path || item.url || '';
     link.append(path);
 
     li.append(link);
@@ -69,6 +85,7 @@ function renderResults(container, results, query) {
   container.append(list);
 }
 
+// --- 4. Main Block Decoration ---
 export default async function decorate(block) {
   block.textContent = '';
 
@@ -114,8 +131,7 @@ export default async function decorate(block) {
         status.textContent = '';
         return;
       }
-      const index = await fetchQueryIndex();
-      const results = filterResults(index, query);
+      const results = await fetchAlgoliaResults(query);
       renderResults(resultsContainer, results, query);
       status.textContent = `${results.length} result${results.length !== 1 ? 's' : ''} found`;
     }, 300);
