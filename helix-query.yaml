@@ -15,3 +15,6 @@ indices:
       description:
         select: head > meta[name="description"]
         value: attribute(el, "content")
+      content:
+        select: main
+        value: textContent
