@@ -20,7 +20,7 @@ jobs:
 
       # THIS IS THE MAGIC LINE THAT FIXES YOUR ERROR
       - name: Install Dependencies
-        run: npm install algoliasearch
+        run: npm install algoliasearch@4
 
       - name: Run Algolia Indexing Script
         env:
