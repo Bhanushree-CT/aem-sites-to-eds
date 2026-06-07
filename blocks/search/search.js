@@ -5,30 +5,30 @@ import algoliasearch from 'https://cdn.jsdelivr.net/npm/algoliasearch@4.24.0/dis
 import instantsearch from 'https://cdn.jsdelivr.net/npm/instantsearch.js@4.60.0/dist/instantsearch.production.min.js';
 
 export default async function decorate(block) {
-  block.innerHTML = '';
+  // 1. Force clear EVERYTHING inside the block instantly
+  block.textContent = '';
 
-  // Load the Algolia CSS dynamically into the document head
+  // 2. Load the Algolia CSS
   const algoliaStyle = document.createElement('link');
   algoliaStyle.rel = 'stylesheet';
   algoliaStyle.href = 'https://cdn.jsdelivr.net/npm/instantsearch.css@8.1.0/themes/satellite-min.css';
   document.head.append(algoliaStyle);
 
-  // Build the HTML scaffolding using pure JavaScript
+  // 3. Build the DOM elements
   const searchContainer = document.createElement('div');
   searchContainer.className = 'search-container';
   searchContainer.style.display = 'flex';
   searchContainer.style.gap = '20px';
+  searchContainer.style.width = '100%';
 
-  // Build the Left Sidebar (Filters)
   const sidebar = document.createElement('div');
   sidebar.className = 'search-sidebar';
   sidebar.style.width = '250px';
   sidebar.innerHTML = `
-    <h3>Categories</h3>
+    <h3 style="margin-top: 0;">Categories</h3>
     <div id="category-filters"></div>
   `;
 
-  // Build the Right Main Area (Search Box + Results)
   const mainArea = document.createElement('div');
   mainArea.className = 'search-main';
   mainArea.style.flex = '1';
@@ -38,10 +38,12 @@ export default async function decorate(block) {
   `;
 
   searchContainer.append(sidebar, mainArea);
-  block.append(searchContainer);
+
+  // 4. Force-append our layout directly into the EDS block element
+  block.appendChild(searchContainer);
 
   try {
-    // Initialize Algolia using the correct Application ID and PUBLIC SEARCH ONLY API KEY
+    // 5. Connect to Algolia using your credentials
     const searchClient = algoliasearch('EX4T3T2OE1', '89ac8a6eaa175d2683eb6c95c1808ba2');
 
     const search = instantsearch({
@@ -49,7 +51,6 @@ export default async function decorate(block) {
       searchClient,
     });
 
-    // Add the components (Widgets)
     search.addWidgets([
       instantsearch.widgets.searchBox({
         container: '#searchbox',
@@ -58,7 +59,7 @@ export default async function decorate(block) {
 
       instantsearch.widgets.refinementList({
         container: '#category-filters',
-        attribute: 'category', // Ensure this matches a property in your records
+        attribute: 'category',
       }),
 
       instantsearch.widgets.hits({
@@ -66,9 +67,9 @@ export default async function decorate(block) {
         templates: {
           item(hit, { html, components }) {
             return html`
-              <article class="search-result-card">
-                <h2>${components.Highlight({ hit, attribute: 'title' })}</h2>
-                <p>${hit.description || ''}</p>
+              <article class="search-result-card" style="margin-bottom: 15px; padding: 15px; border: 1px solid #ddd; border-radius: 8px;">
+                <h2 style="margin: 0 0 10px 0;">${components.Highlight({ hit, attribute: 'title' })}</h2>
+                <p style="margin: 0 0 10px 0;">${hit.description || ''}</p>
                 <a href="${hit.path}" class="read-more">Read more</a>
               </article>
             `;
@@ -77,7 +78,9 @@ export default async function decorate(block) {
       }),
     ]);
 
+    // 6. Fire up the engine
     search.start();
+    console.log('Algolia InstantSearch successfully started!');
   } catch (err) {
     console.error('Algolia initialization failed:', err);
   }
