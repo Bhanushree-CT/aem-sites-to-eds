@@ -1,20 +1,20 @@
 /* eslint-disable no-console */
 // eslint-disable-next-line import/no-unresolved
 import algoliasearch from 'https://cdn.jsdelivr.net/npm/algoliasearch@4.24.0/dist/algoliasearch.esm.browser.js';
+
 // eslint-disable-next-line import/no-unresolved
-import instantsearch from 'https://cdn.jsdelivr.net/npm/instantsearch.js@4.60.0/dist/instantsearch.production.min.js';
+import 'https://cdn.jsdelivr.net/npm/instantsearch.js@4.60.0/dist/instantsearch.production.min.js';
 
 export default async function decorate(block) {
-  // 1. Force clear EVERYTHING inside the block instantly
   block.textContent = '';
 
-  // 2. Load the Algolia CSS
+  // Load the Algolia CSS
   const algoliaStyle = document.createElement('link');
   algoliaStyle.rel = 'stylesheet';
   algoliaStyle.href = 'https://cdn.jsdelivr.net/npm/instantsearch.css@8.1.0/themes/satellite-min.css';
   document.head.append(algoliaStyle);
 
-  // 3. Build the DOM elements
+  // Build the DOM elements
   const searchContainer = document.createElement('div');
   searchContainer.className = 'search-container';
   searchContainer.style.display = 'flex';
@@ -38,12 +38,13 @@ export default async function decorate(block) {
   `;
 
   searchContainer.append(sidebar, mainArea);
-
-  // 4. Force-append our layout directly into the EDS block element
   block.appendChild(searchContainer);
 
   try {
-    // 5. Connect to Algolia using your credentials
+    // FIXED: Using object destructuring to satisfy the prefer-destructuring rule
+    const { instantsearch } = window;
+
+    // Connect to Algolia
     const searchClient = algoliasearch('EX4T3T2OE1', '89ac8a6eaa175d2683eb6c95c1808ba2');
 
     const search = instantsearch({
@@ -78,7 +79,6 @@ export default async function decorate(block) {
       }),
     ]);
 
-    // 6. Fire up the engine
     search.start();
     console.log('Algolia InstantSearch successfully started!');
   } catch (err) {
