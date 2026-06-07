@@ -1,10 +1,10 @@
+/* eslint-disable no-console */
 // eslint-disable-next-line import/no-unresolved
-import algoliasearch from 'https://cdn.jsdelivr.net/npm/algoliasearch@4.20.0/dist/algoliasearch-lite.esm.browser.js';
+import algoliasearch from 'https://cdn.jsdelivr.net/npm/algoliasearch@4.24.0/dist/algoliasearch.esm.browser.js';
 // eslint-disable-next-line import/no-unresolved
 import instantsearch from 'https://cdn.jsdelivr.net/npm/instantsearch.js@4.60.0/dist/instantsearch.production.min.js';
 
 export default async function decorate(block) {
-  // Clear any default text the author might have typed in the block
   block.innerHTML = '';
 
   // Load the Algolia CSS dynamically into the document head
@@ -37,47 +37,48 @@ export default async function decorate(block) {
     <div id="hits" style="margin-top: 20px;"></div>
   `;
 
-  // Attach everything to the EDS block on the page
   searchContainer.append(sidebar, mainArea);
   block.append(searchContainer);
 
-  // Initialize Algolia InstantSearch
-  // REMEMBER: Use your SEARCH KEY here, not your Admin Key!
-  const searchClient = algoliasearch('EX4T3T2OE1', '89ac8a6eaa175d2683eb6c95c1808ba2');
+  try {
+    // Initialize Algolia using the correct Application ID and PUBLIC SEARCH ONLY API KEY
+    const searchClient = algoliasearch('EX4T3T2OE1', '89ac8a6eaa175d2683eb6c95c1808ba2');
 
-  const search = instantsearch({
-    indexName: 'eds-github-index',
-    searchClient,
-  });
+    const search = instantsearch({
+      indexName: 'eds-github-index',
+      searchClient,
+    });
 
-  // Add the Lego pieces (Widgets)
-  search.addWidgets([
-    instantsearch.widgets.searchBox({
-      container: '#searchbox',
-      placeholder: 'Search for articles, products, etc...',
-    }),
+    // Add the components (Widgets)
+    search.addWidgets([
+      instantsearch.widgets.searchBox({
+        container: '#searchbox',
+        placeholder: 'Search for articles, products, etc...',
+      }),
 
-    instantsearch.widgets.refinementList({
-      container: '#category-filters',
-      attribute: 'category',
-    }),
+      instantsearch.widgets.refinementList({
+        container: '#category-filters',
+        attribute: 'category', // Ensure this matches a property in your records
+      }),
 
-    instantsearch.widgets.hits({
-      container: '#hits',
-      templates: {
-        item(hit, { html, components }) {
-          return html`
-            <article class="search-result-card">
-              <h2>${components.Highlight({ hit, attribute: 'title' })}</h2>
-              <p>${hit.description}</p>
-              <a href="${hit.path}" class="read-more">Read more</a>
-            </article>
-          `;
+      instantsearch.widgets.hits({
+        container: '#hits',
+        templates: {
+          item(hit, { html, components }) {
+            return html`
+              <article class="search-result-card">
+                <h2>${components.Highlight({ hit, attribute: 'title' })}</h2>
+                <p>${hit.description || ''}</p>
+                <a href="${hit.path}" class="read-more">Read more</a>
+              </article>
+            `;
+          },
         },
-      },
-    }),
-  ]);
+      }),
+    ]);
 
-  // Turn it on!
-  search.start();
+    search.start();
+  } catch (err) {
+    console.error('Algolia initialization failed:', err);
+  }
 }
