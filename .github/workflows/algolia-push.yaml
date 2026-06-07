@@ -1,6 +1,5 @@
 name: Push Search Data to Algolia
 
-# Triggers the script every time code is merged into the main branch
 on:
   push:
     branches:
@@ -17,13 +16,13 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
 
+      # THIS IS THE MAGIC LINE THAT FIXES YOUR ERROR
       - name: Install Dependencies
-        run: npm install
+        run: npm install algoliasearch
 
       - name: Run Algolia Indexing Script
-        # This securely injects the secrets you saved in GitHub into the Node script
         env:
           ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
           ALGOLIA_ADMIN_KEY: ${{ secrets.ALGOLIA_ADMIN_KEY }}
