@@ -1,20 +1,21 @@
-// 1. Load the InstantSearch library
+// eslint-disable-next-line import/no-unresolved
+import algoliasearch from 'https://cdn.jsdelivr.net/npm/algoliasearch@4.20.0/dist/algoliasearch-lite.esm.browser.js';
+// eslint-disable-next-line import/no-unresolved
 import instantsearch from 'https://cdn.jsdelivr.net/npm/instantsearch.js@4.60.0/dist/instantsearch.production.min.js';
 
 export default async function decorate(block) {
-  // Clear any default text the author might have typed in the Word/Google Doc block
+  // Clear any default text the author might have typed in the block
   block.innerHTML = '';
 
-  // 2. Load the Algolia CSS dynamically into the document head
+  // Load the Algolia CSS dynamically into the document head
   const algoliaStyle = document.createElement('link');
   algoliaStyle.rel = 'stylesheet';
   algoliaStyle.href = 'https://cdn.jsdelivr.net/npm/instantsearch.css@8.1.0/themes/satellite-min.css';
   document.head.append(algoliaStyle);
 
-  // 3. Build the HTML scaffolding using pure JavaScript
+  // Build the HTML scaffolding using pure JavaScript
   const searchContainer = document.createElement('div');
   searchContainer.className = 'search-container';
-  // Note: It is better to move these inline styles to your search.css file later!
   searchContainer.style.display = 'flex';
   searchContainer.style.gap = '20px';
 
@@ -40,18 +41,17 @@ export default async function decorate(block) {
   searchContainer.append(sidebar, mainArea);
   block.append(searchContainer);
 
-  // 4. Initialize Algolia InstantSearch NOW that the DOM elements exist
+  // Initialize Algolia InstantSearch
   // REMEMBER: Use your SEARCH KEY here, not your Admin Key!
-  const searchClient = algoliasearch('EX4T3T2OE1', 'YOUR_SEARCH_ONLY_API_KEY');
+  const searchClient = algoliasearch('EX4T3T2OE1', '89ac8a6eaa175d2683eb6c95c1808ba2');
 
   const search = instantsearch({
     indexName: 'eds-github-index',
     searchClient,
   });
 
-  // 5. Add the Lego pieces (Widgets)
+  // Add the Lego pieces (Widgets)
   search.addWidgets([
-
     instantsearch.widgets.searchBox({
       container: '#searchbox',
       placeholder: 'Search for articles, products, etc...',
@@ -59,7 +59,7 @@ export default async function decorate(block) {
 
     instantsearch.widgets.refinementList({
       container: '#category-filters',
-      attribute: 'category', // CHANGE THIS to match the column name in your EDS index
+      attribute: 'category',
     }),
 
     instantsearch.widgets.hits({
@@ -75,7 +75,7 @@ export default async function decorate(block) {
           `;
         },
       },
-    })
+    }),
   ]);
 
   // Turn it on!
