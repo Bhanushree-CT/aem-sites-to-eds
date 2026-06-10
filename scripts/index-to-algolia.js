@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+// eslint-disable-next-line import/no-unresolved
 const algoliasearch = require('algoliasearch');
 
 const {
@@ -29,16 +30,24 @@ async function syncAemApiToAlgolia() {
     }
 
     const payload = await response.json();
+
+    // Look directly inside the payload results
     const rawPages = payload.results || [];
 
-    const records = rawPages.map((page) => ({
-      objectID: page.path,
-      path: page.path,
-      title: page.title || 'Untitled Page',
-      description: page.description || '',
-      category: page.category || 'General',
-      lastModified: page.lastmodified || new Date().toISOString(),
-    }));
+    console.log(`Mapping ${rawPages.length} active API documents...`);
+
+    const records = rawPages.map((page) => {
+      const uniquePath = page.path || page.route || '/';
+
+      return {
+        objectID: uniquePath,
+        path: uniquePath,
+        title: page.title || 'Untitled Page',
+        description: page.description || '',
+        category: page.category || 'General',
+        lastModified: page.lastmodified || new Date().toISOString(),
+      };
+    });
 
     console.log(`Syncing ${records.length} direct API records over to Algolia...`);
     await index.replaceAllObjects(records);
