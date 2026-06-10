@@ -27,6 +27,10 @@ export default async function decorate(block) {
   sidebar.innerHTML = `
     <h3 style="margin-top: 0;">Categories</h3>
     <div id="category-filters"></div>
+    <h3 style="margin-top: 0;">Sections</h3>
+    <div id="section-filters"></div>
+    <h3 style="margin-top: 0;">Tags</h3>
+    <div id="tag-filters"></div>
   `;
 
   const mainArea = document.createElement('div');
