@@ -15,7 +15,7 @@ async function syncAemApiToAlgolia() {
   try {
     console.log('Authenticating securely via AEM Technical Account credentials...');
 
-    const aemApiUrl = 'https://admin.hlx.page/index/Bhanushree-CT/aem-sites-to-eds/main';
+    const aemApiUrl = 'https://admin.hlx.page/index/Bhanushree-CT/aem-sites-to-eds/main?limit=100';
 
     const response = await fetch(aemApiUrl, {
       method: 'GET',
