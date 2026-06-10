@@ -1,61 +1,45 @@
-/* eslint-disable no-console */
-// eslint-disable-next-line import/no-unresolved
+/* eslint-disable */
 const algoliasearch = require('algoliasearch');
 
-const {
-  ALGOLIA_APP_ID,
-  ALGOLIA_ADMIN_KEY,
-  AEM_ADMIN_SERVICE_TOKEN,
-} = process.env;
+const APP_ID = process.env.ALGOLIA_APP_ID;
+const ADMIN_KEY = process.env.ALGOLIA_ADMIN_KEY;
 
-const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_ADMIN_KEY);
+const client = algoliasearch(APP_ID, ADMIN_KEY);
 const index = client.initIndex('eds-github-index');
 
-async function syncAemApiToAlgolia() {
+async function pushDataToAlgolia() {
   try {
-    console.log('Authenticating securely via AEM Technical Account credentials...');
+    console.log('Fetching Edge Delivery Services index data...');
 
-    const aemApiUrl = 'https://admin.hlx.page/index/Bhanushree-CT/aem-sites-to-eds/main?limit=100';
-
-    const response = await fetch(aemApiUrl, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${AEM_ADMIN_SERVICE_TOKEN}`,
-        'Content-Type': 'application/json',
-      },
-    });
+    const response = await fetch('https://main--aem-sites-to-eds--bhanushree-ct.aem.live/query-index.json');
 
     if (!response.ok) {
-      throw new Error(`AEM API request failed: ${response.statusText}`);
+     //Added backticks around the error message
+      throw new Error(`Failed to fetch data: ${response.statusText}`);
     }
 
-    const payload = await response.json();
+    const data = await response.json();
 
-    // Look directly inside the payload results
-    const rawPages = payload.results || [];
-
-    console.log(`Mapping ${rawPages.length} active API documents...`);
-
-    const records = rawPages.map((page) => {
-      const uniquePath = page.path || page.route || '/';
-
+    // Create a new array of records, injecting a strict objectID
+    const records = data.data.map((item) => {
       return {
-        objectID: uniquePath,
-        path: uniquePath,
-        title: page.title || 'Untitled Page',
-        description: page.description || '',
-        category: page.category || 'General',
-        lastModified: page.lastmodified || new Date().toISOString(),
+        ...item,
+        // We use the page path as the unique ID.
+        // This ensures Algolia UPDATES existing records instead of duplicating them.
+        objectID: item.path,
       };
     });
 
-    console.log(`Syncing ${records.length} direct API records over to Algolia...`);
-    await index.replaceAllObjects(records);
-    console.log('Success! Your enterprise search pipeline is perfectly synced.');
+    //Added backticks around the console log
+    console.log(`Found ${records.length} records. Pushing to Algolia...`);
+
+    await index.saveObjects(records);
+
+    console.log('Success! Your updated data is now in the cloud cabinet.');
   } catch (error) {
-    console.error('API Sync Failed:', error);
+    console.error('Error pushing data to Algolia:', error);
     process.exit(1);
   }
 }
 
-syncAemApiToAlgolia();
+pushDataToAlgolia();
