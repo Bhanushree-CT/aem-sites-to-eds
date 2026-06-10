@@ -1,35 +1,52 @@
-/* eslint-disable */
+/* eslint-disable no-console */
 const algoliasearch = require('algoliasearch');
 
-const APP_ID = process.env.ALGOLIA_APP_ID;
-const ADMIN_KEY = process.env.ALGOLIA_ADMIN_KEY;
+const {
+  ALGOLIA_APP_ID,
+  ALGOLIA_ADMIN_KEY,
+  AEM_ADMIN_SERVICE_TOKEN,
+} = process.env;
 
-const client = algoliasearch(APP_ID, ADMIN_KEY);
+const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_ADMIN_KEY);
 const index = client.initIndex('eds-github-index');
 
-async function pushDataToAlgolia() {
+async function syncAemApiToAlgolia() {
   try {
-    console.log('Fetching Edge Delivery Services index data...');
+    console.log('Authenticating securely via AEM Technical Account credentials...');
 
-    // The quote is now perfectly wrapping the entire URL
-    const response = await fetch('https://main--aem-sites-to-eds--bhanushree-ct.aem.live/query-index.json');
+    const aemApiUrl = 'https://admin.hlx.page/index/Bhanushree-CT/aem-sites-to-eds/main';
+
+    const response = await fetch(aemApiUrl, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${AEM_ADMIN_SERVICE_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+    });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch data: ${response.statusText}`);
+      throw new Error(`AEM API request failed: ${response.statusText}`);
     }
 
-    const data = await response.json();
-    const records = data.data;
+    const payload = await response.json();
+    const rawPages = payload.results || [];
 
-    console.log(`Found ${records.length} records. Pushing to Algolia...`);
+    const records = rawPages.map((page) => ({
+      objectID: page.path,
+      path: page.path,
+      title: page.title || 'Untitled Page',
+      description: page.description || '',
+      category: page.category || 'General',
+      lastModified: page.lastmodified || new Date().toISOString(),
+    }));
 
-    await index.saveObjects(records, { autoGenerateObjectIDIfNotExist: true });
-
-    console.log('Success! Your data is now in the cloud cabinet.');
+    console.log(`Syncing ${records.length} direct API records over to Algolia...`);
+    await index.replaceAllObjects(records);
+    console.log('Success! Your enterprise search pipeline is perfectly synced.');
   } catch (error) {
-    console.error('Error pushing data to Algolia:', error);
+    console.error('API Sync Failed:', error);
     process.exit(1);
   }
 }
 
-pushDataToAlgolia();
+syncAemApiToAlgolia();
