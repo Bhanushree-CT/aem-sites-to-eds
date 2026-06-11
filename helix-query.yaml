@@ -21,7 +21,5 @@ indices:
       section:
         select: head > meta[name="section"]
         value: attribute(el, "content")
-      tags:
-        select: head > meta[name="tags"]
-        value: attribute(el, "content")
+
 
