@@ -67,6 +67,11 @@ export default async function decorate(block) {
         attribute: 'category',
       }),
 
+      instantsearch.widgets.refinementList({
+              container: '#section-filters',
+              attribute: 'section',
+            }),
+
       instantsearch.widgets.hits({
         container: '#hits',
         templates: {
