@@ -6,11 +6,11 @@ on:
       - main
   workflow_dispatch:
   schedule:
-    - cron: '*/30 * * * *'//automatically run the workflow for every 30mins
+    - cron: '*/30 * * * *' # automatically run the workflow every 30 mins
+
 jobs:
   update-algolia-index:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -20,7 +20,6 @@ jobs:
         with:
           node-version: '24'
 
-      # THIS IS THE MAGIC LINE THAT FIXES YOUR ERROR
       - name: Install Dependencies
         run: npm install algoliasearch@4
 
