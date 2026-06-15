@@ -5,7 +5,8 @@ on:
     branches:
       - main
   workflow_dispatch:
-
+  schedule:
+    - cron: '*/30 * * * *'//automatically run the workflow for every 30mins
 jobs:
   update-algolia-index:
     runs-on: ubuntu-latest
