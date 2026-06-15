@@ -2,11 +2,11 @@ version: 1
 indices:
   default:
     include:
-      - /**
+      - '/**'
     exclude:
-      - /configuration/**
-      - /nav/**
-      - /drafts/**
+      - '/configuration/**'
+      - '/nav/**'
+      - '/drafts/**'
     target: /query-index.json
     properties:
       title:
@@ -24,9 +24,13 @@ indices:
 
   algolia-trigger:
     include:
-      - /**
+      - '/**'
     exclude:
-      - /configuration/**
-      - /nav/**
-      - /drafts/**
+      - '/configuration/**'
+      - '/nav/**'
+      - '/drafts/**'
     target: https://eds-github-bridge.bhanuoutlook30.workers.dev
+    properties:
+      title:
+        select: head > meta[property="og:title"]
+        value: attribute(el, "content")
