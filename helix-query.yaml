@@ -22,4 +22,11 @@ indices:
         select: head > meta[name="section"]
         value: attribute(el, "content")
 
-
+  algolia-trigger:
+    include:
+      - /**
+    exclude:
+      - /configuration/**
+      - /nav/**
+      - /drafts/**
+    target: https://eds-github-bridge.bhanuoutlook30.workers.dev

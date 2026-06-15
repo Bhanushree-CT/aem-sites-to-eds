@@ -5,8 +5,8 @@ on:
     branches:
       - main
   workflow_dispatch:
-  schedule:
-    - cron: '45,55 * * * *' # automatically run the workflow every 30 mins
+  repository_dispatch:
+    types: [ publish-event ]
 
 jobs:
   update-algolia-index:
